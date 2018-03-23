@@ -126,6 +126,9 @@
   import axios from 'axios'
 
   export default {
+    mounted () {
+      console.log('this.$root.$data', this.$root.$data)
+    },
     data () {
       let vm = this
       return {
@@ -201,7 +204,7 @@
         }
         let verifyResponse
         try {
-          verifyResponse = await axios.post('http://localhost:4001/v1/api/verification/verify', {
+          verifyResponse = await axios.post(`${this.$root.ENV.API_URL}/verification/verify`, {
             phone_number: this.phone,
             service: 'kaztel',
             code: parseInt(this.code, 10),
@@ -229,7 +232,7 @@
           console.error('Cant check batch status - no link provided')
           return
         }
-        const id = verifyResponse.link.replace('http://127.0.0.1:8008/batch_statuses?id=', '')
+        const id = verifyResponse.link.replace(`${this.$root.ENV.VALIDATOR_API_URL}/batch_statuses?id=`, '')
         if (!id) {
           return
         }
@@ -241,7 +244,7 @@
 
         this.batchChecker(id, () => {
           try {
-            axios.post(`http://localhost:4001/v1/api/verification/check-verification`, {
+            axios.post(`${this.$root.ENV.API_URL}/verification/check-verification`, {
               phone_number: this.phone,
               service: 'kaztel',
               index: verifyResponse.logIndexToCheck,
@@ -289,7 +292,7 @@
         let counter = 0
         let vm = this
         vm.codechekerInterval = setInterval(function () {
-          axios.get('http://localhost:4001/v1/api/chain/batch_statuses', {params: {id: id}})
+          axios.get(`${this.$root.ENV.API_URL}/chain/batch_statuses`, {params: {id: id}})
             .then(rs => {
               const status = rs.data.status || null
               if (status === 'INVALID') {
@@ -321,7 +324,7 @@
       sendCode (method, resend = false) {
         this.sheet = false
         let vm = this
-        axios.post('http://localhost:4001/v1/api/verification/code', {
+        axios.post(`${this.$root.ENV.API_URL}/verification/code`, {
           phone_number: this.phone,
           service: 'kaztel',
           method: method,
@@ -343,12 +346,12 @@
             console.log('r', r)
             let counter = 0
             vm.codechekerInterval = setInterval(function () {
-              axios.get('http://localhost:4001/v1/api/chain/batch_statuses', {params: {id: id}})
+              axios.get(`${this.$root.ENV.API_URL}/chain/batch_statuses`, {params: {id: id}})
                 .then(rs => {
                   console.log('rs', rs)
 
                   if (rs.data && rs.data.status && rs.data.status === 'COMMITTED') {
-                    axios.get(`http://localhost:4001/v1/api/verification/deliver/${'kaztel'}/${method}/${vm.phone}`)
+                    axios.get(`${this.$root.ENV.API_URL}/verification/deliver/${'kaztel'}/${method}/${vm.phone}`)
                       .then(_rs => {
                         const status = _rs.data['status']
                         console.log('_rs', status)
@@ -408,9 +411,10 @@
         }
       },
       submitPhone () {
+        console.log('this.$root.ENV', this.$root.$data)
         if (this.$refs.form.validate()) {
           // Native form submission is not yet supported
-          axios.post('http://localhost:4001/v1/api/verification/verify-user', {
+          axios.post(`${this.$root.ENV.API_URL}/verification/verify-user`, {
             phone_number: this.phone,
             service: 'kaztel',
             client_timestamp: (new Date()).getTime() / 1000,
