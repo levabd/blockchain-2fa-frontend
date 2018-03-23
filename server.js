@@ -14,8 +14,10 @@ router.get('/get-config', (req, res, next) => {
   res.send(JSON.stringify(config));
 })
 router.get('/*', (req, res, next) => {
+  console.log('App running on port')
   res.sendFile(`${__dirname}/dist/index.html`)
 })
+
 app.use('/', router)
 app.listen(port)
 console.log('App running on port', port)
