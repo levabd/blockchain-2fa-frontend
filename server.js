@@ -7,8 +7,7 @@ app.engine('.html', require('ejs').renderFile)
 app.set('views', `${__dirname}/dist`)
 router.get('/get-config', (req, res, next) => {
   const config = {
-    API_URL: process.env.API_URL || 'http://localhost:3000/v1/api',
-    VALIDATOR_API_URL: process.env.VALIDATOR_API_URL || 'http://sawtooth-validator-public:8008'
+    API_URL: process.env.API_URL || 'https://allatrack-tfa.tk:443/v1/api',
   };
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(config));
