@@ -1,4 +1,4 @@
-# docker build . -t sawtooth-tfa-entrance
+# docker build . -t sawtooth-tfa-entrance-frontend
 FROM node:9.11.1-alpine
 MAINTAINER Artem Golovin <hey@artemgolovin.com>
 # use changes to package.json to force Docker not to use the cache

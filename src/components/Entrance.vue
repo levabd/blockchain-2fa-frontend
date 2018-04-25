@@ -472,7 +472,7 @@
             event: this.$route.query.event || 'login',
             lang: 'ru'
           }
-          const url = `/web/verify-user`
+          const url = `/web/verify/user`
           const apiKey = await this.getApiKey(url, data, this.phone)
           return axios.post(`${this.ENV.API_URL}${url}`, data, {
             headers: {'api-key': apiKey}
@@ -511,7 +511,6 @@
           this.serverErrors = []
           this.serverErrors.push({user: 'Пользователь не найден'})
         }
-        console.log('this.serverErrors', this.serverErrors)
       },
       clear () {
         this.$refs.form.reset()
@@ -568,7 +567,6 @@
             strBody = `${key}:${body[key]}`
           }
         })
-        console.log('strBody', strBody)
         strBody = strBody + ';'
         return SparkMD5.hash(url + '::body::' + this.decimalToHexString(CRC32.str(strBody)) + '::key::' + secret + '::phone_number::' + phoneNUmber).toString(CryptoJS.enc.Hex) + this.makeRandomHexString()
       },
@@ -618,7 +616,10 @@
   }
 </style>
 <style scoped>
-
+  pre{
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   h1, h2 {
     font-weight: normal;
